@@ -1,0 +1,4 @@
+bronze_data/
+gold_data/
+silver_data/
+.terraform/
