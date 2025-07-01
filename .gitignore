@@ -1,4 +1,55 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Environment
+.env
+*.env
+.venv/
+venv/
+ENV/
+env.bak/
+env/
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints
+
+# macOS
+.DS_Store
+
+# VS Code / IDE config
+.vscode/
+.idea/
+
+# Logs
+*.log
+
+# Output / Temp folders
 bronze_data/
-gold_data/
 silver_data/
+gold_data/
+temp/
+tmp/
+
+# Glue metadata
+metadata/
+scripts/__pycache__/
+
+# Terraform
 .terraform/
+*.tfstate
+*.tfstate.backup
+terraform.tfvars
+terraform.tfvars.json
+.crc
+
+# Delta logs
+_delta_log/
+
+# AWS credentials (be careful with hardcoding)
+*.pem
+*.key
+
+# Local dev
+*.iml
