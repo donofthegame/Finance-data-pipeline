@@ -64,8 +64,12 @@ df_customer_360 = df_customers \
     .join(df_accounts_agg, on="customer_id", how="left") \
     .join(df_txn_agg, on="customer_id", how="left")
 
+df_clean = df_customer_360.drop(
+    "silver_customer_ingestion_time", "bronze_file_name", "row_hash"
+)
+
 # Write to gold
-df_customer_360.write \
+df_clean.write \
     .format("delta") \
     .mode("overwrite") \
     .option("path", "s3://fdp-gold-data-v5/customer_360/") \
