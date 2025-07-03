@@ -1,8 +1,10 @@
 # Databricks notebook source
+import pandas as pd
+
 df_payments = spark.read.csv('/Volumes/workspace/default/fdp/loan_payments.csv', header=True, inferSchema=True)
 df_loans = spark.read.csv('/Volumes/workspace/default/fdp/loans.csv', header= True, inferSchema=True)
-# display(df_loan_payments)
-# display(df_loans)
+display(df_payments)
+display(df_loans)
 
 # COMMAND ----------
 
@@ -103,6 +105,17 @@ df_ml = df_loans_clean.join(df_pay_features, on="loan_id", how="inner") \
 
 # COMMAND ----------
 
+df_ml_pd = df_ml.toPandas()
+
+
+
+# COMMAND ----------
+
+# MAGIC %md
+# MAGIC
+
+# COMMAND ----------
+
 # MAGIC %md
 # MAGIC Convert to Pandas
 
@@ -138,6 +151,9 @@ print("Logistic Regression Accuracy:", logreg.score(X_test, y_test))
 
 # COMMAND ----------
 
+y_pred = logreg.predict(X_test)
+
+
 y_prob = logreg.predict_proba(X_test)[:, 1]
 
 X_test_result = X_test.copy()
@@ -145,7 +161,17 @@ X_test_result["actual"] = y_test.values
 X_test_result["predicted"] = y_pred
 X_test_result["probability"] = y_prob
 
-X_test_result.head()
+# X_test_result.head()
+id_cols = df_ml_pd.loc[X_test.index, ["loan_id", "customer_id", "loan_type"]]
+
+
+# Reattach identifier columns
+X_test_result_final = pd.concat([id_cols.reset_index(drop=True), X_test_result.reset_index(drop=True)], axis=1)
+
+
+# Preview
+X_test_result_final.head()
+
 
 
 # COMMAND ----------
@@ -184,8 +210,16 @@ X_test_lin_result = X_test_lin.copy()
 X_test_lin_result["actual_total_payment_amount"] = y_test_lin.values
 X_test_lin_result["predicted_total_payment_amount"] = y_pred_lin
 
-# Preview the result
-X_test_lin_result.head()
+# # Preview the result
+# X_test_lin_result.head()
+id_cols = df_ml_pd.loc[X_test.index, ["loan_id", "customer_id", "loan_type"]]
+
+
+# Add back identifiers
+X_test_lin_result_final = pd.concat([id_cols.reset_index(drop=True), X_test_lin_result.reset_index(drop=True)], axis=1)
+
+# Preview
+X_test_lin_result_final.head()
 
 
 # COMMAND ----------
